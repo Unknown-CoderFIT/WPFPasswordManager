@@ -21,7 +21,7 @@
 
 ### Требования
 - Windows 10/11 x64
-- .NET 9 Runtime (или self-contained версия)
+- .NET 9 Runtime (или портативная версия)
 
 ### Из исходников
 ```bash
