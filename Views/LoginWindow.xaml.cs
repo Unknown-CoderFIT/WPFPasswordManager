@@ -3,6 +3,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+
 namespace PasswordManager.Views
 {
     public partial class LoginWindow : Window

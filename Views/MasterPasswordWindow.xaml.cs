@@ -42,33 +42,48 @@ namespace PasswordManager.Views
             CreateButton.IsEnabled = lengthOK && digitOK && specialOK && upperOK && lowerOK;
         }
 
-        private void CreateButton_Click(object sender, RoutedEventArgs e)
+        private async void CreateButton_Click(object sender, RoutedEventArgs e)
         {
             string masterPassword = PasswordInput.Text;
             
-            byte[] salt = RandomNumberGenerator.GetBytes(32);
-            byte[] key = DeriveKey(masterPassword, salt);
-            byte[] verifier = SHA256.HashData(key);
+            // Блокируем кнопку, чтобы не нажали дважды
+            CreateButton.IsEnabled = false;
+            CreateButton.Content = "Создание...";
 
-            string appDir = AppDomain.CurrentDomain.BaseDirectory;
-            string dataDir = System.IO.Path.Combine(appDir, "data");
-            System.IO.Directory.CreateDirectory(dataDir);
-            string masterPasswordPath = System.IO.Path.Combine(dataDir, "master.dat");
+            try {
+                byte[] key = await Task.Run(() => {
+                    byte[] salt = RandomNumberGenerator.GetBytes(32);
+                    byte[] derivedKey = DeriveKey(masterPassword, salt);
+                    byte[] verifier = SHA256.HashData(derivedKey);
 
-            using var fileStream = new System.IO.FileStream(masterPasswordPath, System.IO.FileMode.Create);
-            using var binaryWriter = new System.IO.BinaryWriter(fileStream);
+                    string appDir = AppDomain.CurrentDomain.BaseDirectory;
+                    string dataDir = System.IO.Path.Combine(appDir, "data");
+                    System.IO.Directory.CreateDirectory(dataDir);
+                    string masterPasswordPath = System.IO.Path.Combine(dataDir, "master.dat");
 
-            binaryWriter.Write(600_000);
-            binaryWriter.Write(salt);
-            binaryWriter.Write(verifier);
+                    using var fileStream = new System.IO.FileStream(masterPasswordPath, System.IO.FileMode.Create);
+                    using var binaryWriter = new System.IO.BinaryWriter(fileStream);
 
-            string vaultPath = System.IO.Path.Combine(dataDir, "vault.enc");
-            byte[] emptyVault = EncryptVault("[]", key);
-            System.IO.File.WriteAllBytes(vaultPath, emptyVault);
+                    binaryWriter.Write(600_000);
+                    binaryWriter.Write(salt);
+                    binaryWriter.Write(verifier);
 
-            var mainWindow = new MainWindow(key);
-            mainWindow.Show();
-            this.Close();
+                    string vaultPath = System.IO.Path.Combine(dataDir, "vault.enc");
+                    byte[] emptyVault = EncryptVault("[]", derivedKey);
+                    System.IO.File.WriteAllBytes(vaultPath, emptyVault);
+
+                    return derivedKey;
+                });
+
+                var mainWindow = new MainWindow(key);
+                mainWindow.Show();
+                this.Close();
+            } catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                CreateButton.IsEnabled = true;
+                CreateButton.Content = "Создать мастер-пароль";
+            }
         }
 
         private void UpdateCriterion(Border border, bool isOk)
