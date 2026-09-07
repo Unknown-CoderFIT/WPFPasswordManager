@@ -18,6 +18,11 @@ namespace PasswordManager.Views
             PasswordInput.Focus();
         }
 
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            Application.Current.Shutdown();
+        }   
+
         private void PasswordInput_TextChanged(object sender, TextChangedEventArgs e)
         {
             string password = PasswordInput.Text;
