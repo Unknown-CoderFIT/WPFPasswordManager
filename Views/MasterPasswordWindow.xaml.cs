@@ -72,6 +72,7 @@ namespace PasswordManager.Views
                 File.WriteAllBytes(vaultPath, emptyVault);
 
                 var mainWindow = new MainWindow(key);
+                Application.Current.MainWindow = mainWindow;
                 mainWindow.Show();                
                 this.Hide();
             
