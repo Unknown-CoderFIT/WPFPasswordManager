@@ -5,7 +5,6 @@ namespace PasswordManager.Services;
 
 public static class VaultCrypto
 {
-    private const int KeySize = 32;       // 256 бит
     private const int NonceSize = 12;     // 96 бит для GCM
     private const int TagSize = 16;       // 128 бит
 

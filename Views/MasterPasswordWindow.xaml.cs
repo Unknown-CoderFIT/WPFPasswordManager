@@ -4,6 +4,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.IO;
 
 namespace PasswordManager.Views
 {
@@ -46,38 +47,34 @@ namespace PasswordManager.Views
         {
             string masterPassword = PasswordInput.Text;
             
-            // Блокируем кнопку, чтобы не нажали дважды
-            CreateButton.IsEnabled = false;
-            CreateButton.Content = "Создание...";
-
+            
             try {
-                byte[] key = await Task.Run(() => {
-                    byte[] salt = RandomNumberGenerator.GetBytes(32);
-                    byte[] derivedKey = DeriveKey(masterPassword, salt);
-                    byte[] verifier = SHA256.HashData(derivedKey);
+                CreateButton.IsEnabled = false;
+                CreateButton.Content = "Создание...";
 
-                    string appDir = AppDomain.CurrentDomain.BaseDirectory;
-                    string dataDir = System.IO.Path.Combine(appDir, "data");
-                    System.IO.Directory.CreateDirectory(dataDir);
-                    string masterPasswordPath = System.IO.Path.Combine(dataDir, "master.dat");
+                byte[] salt = RandomNumberGenerator.GetBytes(32);
+                byte[] key = DeriveKey(masterPassword, salt);
+                byte[] verifier = SHA256.HashData(key);
 
-                    using var fileStream = new System.IO.FileStream(masterPasswordPath, System.IO.FileMode.Create);
-                    using var binaryWriter = new System.IO.BinaryWriter(fileStream);
+                string appDir = AppDomain.CurrentDomain.BaseDirectory;
+                string dataDir = Path.Combine(appDir, "data");
+                Directory.CreateDirectory(dataDir);
+                string masterPath = Path.Combine(dataDir, "master.dat");
 
-                    binaryWriter.Write(600_000);
-                    binaryWriter.Write(salt);
-                    binaryWriter.Write(verifier);
+                using var fs = new FileStream(masterPath, FileMode.Create);
+                using var bw = new BinaryWriter(fs);
+                bw.Write(600_000);
+                bw.Write(salt);
+                bw.Write(verifier);
 
-                    string vaultPath = System.IO.Path.Combine(dataDir, "vault.enc");
-                    byte[] emptyVault = EncryptVault("[]", derivedKey);
-                    System.IO.File.WriteAllBytes(vaultPath, emptyVault);
-
-                    return derivedKey;
-                });
+                string vaultPath = Path.Combine(dataDir, "vault.enc");
+                byte[] emptyVault = EncryptVault("[]", key);
+                File.WriteAllBytes(vaultPath, emptyVault);
 
                 var mainWindow = new MainWindow(key);
-                mainWindow.Show();
-                this.Close();
+                mainWindow.Show();                
+                this.Hide();
+            
             } catch (Exception ex)
             {
                 MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -113,7 +110,7 @@ namespace PasswordManager.Views
             byte[] nonce = RandomNumberGenerator.GetBytes(12);
             byte[] plainBytes = Encoding.UTF8.GetBytes(json);
             byte[] cipherText = new byte[plainBytes.Length];
-            byte[] tag = new byte[32];
+            byte[] tag = new byte[16];
 
             using var aes = new AesGcm(key, 16);
             aes.Encrypt(nonce, plainBytes, cipherText, tag);
