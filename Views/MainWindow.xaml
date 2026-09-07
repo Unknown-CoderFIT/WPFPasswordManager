@@ -1,0 +1,130 @@
+﻿<Window x:Class="PasswordManager.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PasswordManager.Views"
+        mc:Ignorable="d"
+        Title="Портативный менеджер паролей" Height="862" Width="800"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
+        Background="#2D2D2D"
+        Closed="Window_Closed">
+    <Grid Margin="40">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Заголовок -->
+        <Border Grid.Row="0"
+                Background="#2E7D32"
+                BorderBrush="Black"
+                BorderThickness="2"
+                CornerRadius="10"
+                Padding="20"
+                Margin="0,40,0,60">
+            <TextBlock Text="Добро пожаловать!&#x0A;Выберите действие"
+                       FontSize="22"
+                       FontWeight="Bold"
+                       Foreground="Black"
+                       HorizontalAlignment="Center"
+                       TextAlignment="Center"/>
+        </Border>
+
+        <!-- Пустое пространство -->
+        <Grid Grid.Row="1"/>
+
+        <!-- Кнопка "Создать пароль" -->
+        <Button x:Name="CreatePasswordButton"
+                Grid.Row="2"
+                Content="Создать пароль"
+                FontSize="18"
+                Padding="20,15"
+                Cursor="Hand"
+                Click="CreatePasswordButton_Click"
+                HorizontalAlignment="Center"
+                Width="400"
+                Margin="0,20">
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Setter Property="Background" Value="#1976D2"/>
+                    <Setter Property="Foreground" Value="Black"/>
+                    <Setter Property="BorderBrush" Value="Black"/>
+                    <Setter Property="BorderThickness" Value="2"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="border"
+                                        Background="{TemplateBinding Background}"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                        CornerRadius="10"
+                                        Padding="{TemplateBinding Padding}">
+                                    <ContentPresenter HorizontalAlignment="Center"
+                                                      VerticalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="border" Property="Background" Value="#1E88E5"/>
+                                        <Setter TargetName="border" Property="BorderBrush" Value="#0D47A1"/>
+                                    </Trigger>
+                                    <Trigger Property="IsPressed" Value="True">
+                                        <Setter TargetName="border" Property="Background" Value="#0D47A1"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Button.Style>
+        </Button>
+
+        <!-- Кнопка "Показать список паролей" -->
+        <Button x:Name="ShowPasswordsButton"
+                Grid.Row="3"
+                Content="Показать список паролей"
+                FontSize="18"
+                Padding="20,15"
+                Cursor="Hand"
+                Click="ShowPasswordsButton_Click"
+                HorizontalAlignment="Center"
+                Width="400"
+                Margin="0,20">
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Setter Property="Background" Value="#1976D2"/>
+                    <Setter Property="Foreground" Value="Black"/>
+                    <Setter Property="BorderBrush" Value="Black"/>
+                    <Setter Property="BorderThickness" Value="2"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="border"
+                                        Background="{TemplateBinding Background}"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                        CornerRadius="10"
+                                        Padding="{TemplateBinding Padding}">
+                                    <ContentPresenter HorizontalAlignment="Center"
+                                                      VerticalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="border" Property="Background" Value="#1E88E5"/>
+                                        <Setter TargetName="border" Property="BorderBrush" Value="#0D47A1"/>
+                                    </Trigger>
+                                    <Trigger Property="IsPressed" Value="True">
+                                        <Setter TargetName="border" Property="Background" Value="#0D47A1"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Button.Style>
+        </Button>
+    </Grid>
+</Window>

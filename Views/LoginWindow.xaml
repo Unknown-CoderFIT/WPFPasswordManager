@@ -1,0 +1,111 @@
+<Window x:Class="PasswordManager.Views.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PasswordManager.Views"
+        mc:Ignorable="d"
+        Title="Портативный менеджер паролей" Height="862" Width="800"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
+        Background="#3D3D3D">
+    <Grid Margin="40">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Заголовок -->
+        <Border Grid.Row="0"
+                Background="#2E7D32"
+                BorderBrush="Black"
+                BorderThickness="2"
+                CornerRadius="10"
+                Padding="20"
+                Margin="0,40,0,60">
+            <TextBlock Text="Введите мастер-пароль"
+                       FontSize="22"
+                       FontWeight="Bold"
+                       Foreground="Black"
+                       HorizontalAlignment="Center"/>
+        </Border>
+
+        <!-- Поле ввода пароля в Material-стиле -->
+        <StackPanel Grid.Row="1" Margin="0,20">
+            <TextBlock Text="Пароль:"
+                       FontSize="16"
+                       Foreground="White"
+                       Margin="0,0,0,5"/>
+            <PasswordBox x:Name="PasswordInput"
+                         FontSize="18"
+                         Background="Transparent"
+                         Foreground="White"
+                         CaretBrush="White"
+                         BorderThickness="0,0,0,2"
+                         BorderBrush="Black"
+                         Padding="5"/>
+        </StackPanel>
+
+        <!-- Сообщение об ошибке (скрыто по умолчанию) -->
+        <TextBlock x:Name="ErrorText"
+                   Grid.Row="2"
+                   Text="Неверный мастер-пароль!"
+                   FontSize="14"
+                   Foreground="#D32F2F"
+                   HorizontalAlignment="Center"
+                   Margin="0,10"
+                   Visibility="Collapsed"/>
+
+        <!-- Пустое пространство -->
+        <Grid Grid.Row="3"/>
+
+        <!-- Кнопка "Войти" -->
+        <Button x:Name="LoginButton"
+                Grid.Row="4"
+                Content="Войти"
+                FontSize="18"
+                Padding="20,12"
+                Cursor="Hand"
+                Click="LoginButton_Click"
+                HorizontalAlignment="Center"
+                Width="300">
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Setter Property="Background" Value="#1976D2"/>
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="BorderBrush" Value="Black"/>
+                    <Setter Property="BorderThickness" Value="2"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="border"
+                                        Background="{TemplateBinding Background}"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                        CornerRadius="10"
+                                        Padding="{TemplateBinding Padding}">
+                                    <ContentPresenter HorizontalAlignment="Center"
+                                                      VerticalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <!-- Наведение мыши -->
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="border" Property="Background" Value="#1E88E5"/>
+                                        <Setter TargetName="border" Property="BorderBrush" Value="#0D47A1"/>
+                                    </Trigger>
+                                    <!-- Нажатие кнопки -->
+                                    <Trigger Property="IsPressed" Value="True">
+                                        <Setter TargetName="border" Property="Background" Value="#0D47A1"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Button.Style>
+        </Button>
+    </Grid>
+</Window>
